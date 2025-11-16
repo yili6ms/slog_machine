@@ -65,6 +65,7 @@ function getPayoutMultiplier(symbols: string[]) {
 }
 
 function SlotMachine() {
+  const [resultType, setResultType] = useState<"none" | "jackpot" | "big" | "win" | "loss">("none");
   const [reels, setReels] = useState<string[]>(["🍒", "🍋", "🔔"]);
   const [credits, setCredits] = useState<number>(100);
   const [bet, setBet] = useState<number>(5);
@@ -82,6 +83,7 @@ function SlotMachine() {
     }
 
     setIsSpinning(true);
+    setResultType("none");
     setCredits((prev) => prev - bet);
     setMessage("Spinning...");
 
@@ -101,14 +103,19 @@ function SlotMachine() {
       if (multiplier > 0) {
         const winnings = bet * multiplier;
         setCredits((prev) => prev + winnings);
+
         if (multiplier >= 10) {
+          setResultType("jackpot");
           setMessage(`JACKPOT! You won ${winnings} credits!`);
         } else if (multiplier >= 5) {
+          setResultType("big");
           setMessage(`Big win! You won ${winnings} credits!`);
         } else {
+          setResultType("win");
           setMessage(`Nice! You won ${winnings} credits.`);
         }
       } else {
+        setResultType("loss");
         setMessage("No win this time. Try again!");
       }
 
@@ -133,7 +140,7 @@ function SlotMachine() {
       {/* top stats bar */}
       <div className="flex flex-col gap-3 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-900/40 via-emerald-900/30 to-teal-900/40 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/70 text-2xl shadow-[0_0_15px_rgba(16,185,129,0.6)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/70 text-2xl shadow-[0_0_15px_rgba(16,185,129,0.6)] transition-transform duration-200 hover:scale-110">
             🎰
           </div>
           <div>
@@ -181,7 +188,11 @@ function SlotMachine() {
       </div>
 
       {/* slot machine body */}
-      <div className="relative rounded-[1.75rem] border border-emerald-500/60 bg-gradient-to-b from-emerald-900 via-emerald-950 to-black p-4 shadow-[0_0_35px_rgba(16,185,129,0.5)] sm:p-5">
+      <div
+        className={`relative rounded-[1.75rem] border border-emerald-500/60 bg-gradient-to-b from-emerald-900 via-emerald-950 to-black p-4 shadow-[0_0_35px_rgba(16,185,129,0.5)] sm:p-5 ${
+          resultType === "loss" ? "machine-shake" : ""
+        }`}
+      >
         {/* top light bar */}
         <div className="mb-4 flex items-center justify-between gap-4 text-xs text-emerald-100/70">
           <div className="flex items-center gap-2">
@@ -198,6 +209,25 @@ function SlotMachine() {
         </div>
 
         <div className="flex items-center gap-4">
+          {resultType === "jackpot" ? (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="win-glow win-glow--jackpot" />
+              <div className="firework firework--jackpot" style={{ top: "8%", left: "8%" }} />
+              <div className="firework firework--jackpot firework--delay-1" style={{ top: "12%", right: "10%" }} />
+              <div className="firework firework--jackpot firework--delay-2" style={{ bottom: "6%", left: "18%" }} />
+            </div>
+          ) : resultType === "big" ? (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="win-glow win-glow--big" />
+              <div className="firework firework--big" style={{ top: "10%", left: "12%" }} />
+              <div className="firework firework--big firework--delay-1" style={{ bottom: "10%", right: "14%" }} />
+            </div>
+          ) : resultType === "win" ? (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="win-glow win-glow--win" />
+              <div className="firework firework--win" style={{ top: "14%", left: "50%" }} />
+            </div>
+          ) : null}
           {/* reels */}
           <div className="relative mx-auto flex max-w-sm flex-1 items-center justify-between rounded-[1.4rem] border border-emerald-500/60 bg-black/80 px-4 py-5 shadow-inner">
             {reels.map((symbol, index) => (
@@ -205,7 +235,7 @@ function SlotMachine() {
                 key={`${symbol}-${index}`}
                 className="flex h-24 w-24 items-center justify-center rounded-2xl border border-emerald-400/70 bg-gradient-to-b from-zinc-900 via-zinc-900 to-black text-5xl shadow-[0_0_30px_rgba(16,185,129,0.7)] sm:h-28 sm:w-28"
               >
-                <span className={isSpinning ? "animate-pulse" : ""}>{symbol}</span>
+                <span className={isSpinning ? "reel-spin" : ""}>{symbol}</span>
               </div>
             ))}
 
@@ -222,7 +252,7 @@ function SlotMachine() {
 
         <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-100/85 sm:flex-row sm:items-center sm:justify-between">
           <p
-            className={`rounded-xl border px-3 py-2 text-xs sm:text-sm ${
+            className={`message-pop rounded-xl border px-3 py-2 text-xs sm:text-sm ${
               message.includes("JACKPOT")
                 ? "border-emerald-400 bg-emerald-900/70 text-emerald-100"
                 : message.includes("win")
@@ -246,7 +276,7 @@ function SlotMachine() {
             type="button"
             onClick={handleSpin}
             disabled={!canSpin}
-            className="relative flex w-44 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 px-8 py-3 text-sm font-semibold tracking-wide text-emerald-950 shadow-lg shadow-emerald-500/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:from-emerald-900 disabled:via-emerald-900 disabled:to-emerald-900 disabled:text-emerald-500"
+            className={`relative flex w-44 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 px-8 py-3 text-sm font-semibold tracking-wide text-emerald-950 shadow-lg shadow-emerald-500/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:from-emerald-900 disabled:via-emerald-900 disabled:to-emerald-900 disabled:text-emerald-500 ${isSpinning ? "spin-button-pressing" : ""}`}
           >
             {isSpinning ? "Spinning..." : "Spin"}
           </button>
@@ -255,4 +285,5 @@ function SlotMachine() {
     </div>
   );
 }
+
 
