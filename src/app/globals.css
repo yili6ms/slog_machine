@@ -218,3 +218,30 @@ body {
 .win-glow--win {
   animation: win-glow 0.7s ease-out forwards;
 }
+
+@keyframes wallpaper-pan {
+  0% {
+    transform: translate3d(-10%, -10%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(5%, 5%, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(-10%, -10%, 0) scale(1.1);
+  }
+}
+
+.dynamic-wallpaper {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.25;
+  background: radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.3), transparent 55%),
+    radial-gradient(circle at 100% 20%, rgba(129, 140, 248, 0.25), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(251, 191, 36, 0.25), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.22), transparent 55%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  animation: wallpaper-pan 28s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}

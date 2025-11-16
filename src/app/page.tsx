@@ -2,20 +2,74 @@
 
 import { useState } from "react";
 
+type Theme = "emerald" | "royal" | "sunset";
+
 export default function Home() {
+  const [theme, setTheme] = useState<Theme>("emerald");
+
+  const themeConfig: Record<
+    Theme,
+    {
+      pageBg: string;
+      glowPrimary: string;
+      glowSecondary: string;
+      mainBorder: string;
+      mainBg: string;
+      headerAccent: string;
+    }
+  > = {
+    emerald: {
+      pageBg: "bg-gradient-to-br from-slate-950 via-emerald-950 to-black",
+      glowPrimary: "bg-emerald-500/20",
+      glowSecondary: "bg-teal-400/10",
+      mainBorder: "border-emerald-500/40",
+      mainBg: "bg-gradient-to-b from-black/70 via-black/75 to-emerald-950/60",
+      headerAccent: "text-emerald-400/70",
+    },
+    royal: {
+      pageBg: "bg-gradient-to-br from-slate-950 via-violet-900 to-black",
+      glowPrimary: "bg-fuchsia-500/20",
+      glowSecondary: "bg-indigo-500/15",
+      mainBorder: "border-violet-400/50",
+      mainBg: "bg-gradient-to-b from-black/70 via-slate-900 to-violet-950/60",
+      headerAccent: "text-violet-300/80",
+    },
+    sunset: {
+      pageBg: "bg-gradient-to-br from-slate-950 via-rose-900 to-black",
+      glowPrimary: "bg-orange-400/25",
+      glowSecondary: "bg-rose-500/15",
+      mainBorder: "border-orange-400/60",
+      mainBg: "bg-gradient-to-b from-black/70 via-slate-900 to-rose-950/60",
+      headerAccent: "text-orange-200/80",
+    },
+  };
+
+  const currentTheme = themeConfig[theme];
+
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-emerald-950 to-black text-foreground">
+    <div
+      className={`relative flex min-h-screen items-center justify-center overflow-hidden ${currentTheme.pageBg} text-foreground`}
+    >
+      <div className="dynamic-wallpaper" />
       {/* background glows */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-teal-400/10 blur-3xl" />
+        <div
+          className={`absolute -left-32 top-10 h-64 w-64 rounded-full ${currentTheme.glowPrimary} blur-3xl`}
+        />
+        <div
+          className={`absolute bottom-0 right-0 h-80 w-80 rounded-full ${currentTheme.glowSecondary} blur-3xl`}
+        />
         <div className="absolute inset-x-0 top-1/3 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
       </div>
 
-      <main className="relative z-10 w-full max-w-2xl rounded-[2rem] border border-emerald-500/40 bg-gradient-to-b from-black/70 via-black/75 to-emerald-950/60 p-6 shadow-[0_0_45px_rgba(16,185,129,0.55)] backdrop-blur-xl sm:p-8">
-        <header className="mb-6 flex items-start justify-between gap-4">
+      <main
+        className={`relative z-10 w-full max-w-2xl rounded-[2rem] border ${currentTheme.mainBorder} ${currentTheme.mainBg} p-4 shadow-[0_0_45px_rgba(16,185,129,0.55)] backdrop-blur-xl sm:p-8`}
+      >
+        <header className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">
+            <p
+              className={`text-xs uppercase tracking-[0.25em] ${currentTheme.headerAccent}`}
+            >
               Slot Machine
             </p>
             <h1 className="mt-1 text-3xl font-semibold tracking-tight text-emerald-100 sm:text-4xl">
@@ -25,11 +79,52 @@ export default function Home() {
               Spin the reels, manage your credits, and chase the jackpot.
             </p>
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-emerald-500/40 bg-black/60 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-200/80">
+          <div className="flex items-center gap-1 rounded-full border border-emerald-500/40 bg-black/60 px-3 py-1 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-200/80">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(74,222,128,0.9)]" />
             Live Mode
           </div>
         </header>
+
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-[11px] text-emerald-100/80 sm:justify-between">
+          <span className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/80">
+            Theme
+          </span>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setTheme("emerald")}
+              className={`rounded-full border px-3 py-1 text-[11px] ${
+                theme === "emerald"
+                  ? "border-emerald-400 bg-emerald-500/20 text-emerald-50"
+                  : "border-emerald-500/40 bg-black/40 text-emerald-200/80"
+              }`}
+            >
+              Neon
+            </button>
+            <button
+              type="button"
+              onClick={() => setTheme("royal")}
+              className={`rounded-full border px-3 py-1 text-[11px] ${
+                theme === "royal"
+                  ? "border-violet-400 bg-violet-500/20 text-violet-50"
+                  : "border-violet-400/40 bg-black/40 text-violet-200/80"
+              }`}
+            >
+              Royal
+            </button>
+            <button
+              type="button"
+              onClick={() => setTheme("sunset")}
+              className={`rounded-full border px-3 py-1 text-[11px] ${
+                theme === "sunset"
+                  ? "border-orange-400 bg-orange-500/20 text-orange-50"
+                  : "border-orange-400/40 bg-black/40 text-orange-200/80"
+              }`}
+            >
+              Sunset
+            </button>
+          </div>
+        </div>
 
         <SlotMachine />
 
@@ -87,40 +182,59 @@ function SlotMachine() {
     setCredits((prev) => prev - bet);
     setMessage("Spinning...");
 
-    const spinDuration = 900;
-    const interval = 80;
+    // Staggered spin: each column has its own velocity and stop time.
+    const intervals = [70, 90, 110];
+    const durations = [700, 950, 1200];
 
-    const spinInterval = setInterval(() => {
-      setReels([getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]);
-    }, interval);
+    // Start all reels spinning with different speeds.
+    const spinIntervals = intervals.map((delay, columnIndex) =>
+      setInterval(() => {
+        setReels((prev) => {
+          const next = [...prev];
+          next[columnIndex] = getRandomSymbol();
+          return next;
+        });
+      }, delay),
+    );
 
-    setTimeout(() => {
-      clearInterval(spinInterval);
-      const finalReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
-      setReels(finalReels);
+    // Precompute the final stop symbols for all reels.
+    const finalReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 
-      const multiplier = getPayoutMultiplier(finalReels);
-      if (multiplier > 0) {
-        const winnings = bet * multiplier;
-        setCredits((prev) => prev + winnings);
+    durations.forEach((duration, columnIndex) => {
+      setTimeout(() => {
+        clearInterval(spinIntervals[columnIndex]);
+        setReels((prev) => {
+          const next = [...prev];
+          next[columnIndex] = finalReels[columnIndex];
+          return next;
+        });
 
-        if (multiplier >= 10) {
-          setResultType("jackpot");
-          setMessage(`JACKPOT! You won ${winnings} credits!`);
-        } else if (multiplier >= 5) {
-          setResultType("big");
-          setMessage(`Big win! You won ${winnings} credits!`);
-        } else {
-          setResultType("win");
-          setMessage(`Nice! You won ${winnings} credits.`);
+        // When the last reel stops, compute the result.
+        if (columnIndex === durations.length - 1) {
+          const multiplier = getPayoutMultiplier(finalReels);
+          if (multiplier > 0) {
+            const winnings = bet * multiplier;
+            setCredits((prev) => prev + winnings);
+
+            if (multiplier >= 10) {
+              setResultType("jackpot");
+              setMessage(`JACKPOT! You won ${winnings} credits!`);
+            } else if (multiplier >= 5) {
+              setResultType("big");
+              setMessage(`Big win! You won ${winnings} credits!`);
+            } else {
+              setResultType("win");
+              setMessage(`Nice! You won ${winnings} credits.`);
+            }
+          } else {
+            setResultType("loss");
+            setMessage("No win this time. Try again!");
+          }
+
+          setIsSpinning(false);
         }
-      } else {
-        setResultType("loss");
-        setMessage("No win this time. Try again!");
-      }
-
-      setIsSpinning(false);
-    }, spinDuration);
+      }, duration);
+    });
   };
 
   const handleReset = () => {
@@ -138,7 +252,7 @@ function SlotMachine() {
   return (
     <div className="space-y-6">
       {/* top stats bar */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-900/40 via-emerald-900/30 to-teal-900/40 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-900/40 via-emerald-900/30 to-teal-900/40 px-4 py-3 text-xs sm:text-sm sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/70 text-2xl shadow-[0_0_15px_rgba(16,185,129,0.6)] transition-transform duration-200 hover:scale-110">
             🎰
@@ -208,7 +322,7 @@ function SlotMachine() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
           {resultType === "jackpot" ? (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
               <div className="win-glow win-glow--jackpot" />
@@ -229,7 +343,7 @@ function SlotMachine() {
             </div>
           ) : null}
           {/* reels */}
-          <div className="relative mx-auto flex max-w-sm flex-1 items-center justify-between rounded-[1.4rem] border border-emerald-500/60 bg-black/80 px-4 py-5 shadow-inner">
+          <div className="relative mx-auto flex w-full max-w-sm flex-1 items-center justify-between rounded-[1.4rem] border border-emerald-500/60 bg-black/80 px-4 py-5 shadow-inner">
             {reels.map((symbol, index) => (
               <div
                 key={`${symbol}-${index}`}
