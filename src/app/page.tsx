@@ -364,21 +364,47 @@ function SlotMachine() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-100/85 sm:flex-row sm:items-center sm:justify-between">
-          <p
-            className={`message-pop rounded-xl border px-3 py-2 text-xs sm:text-sm ${
-              message.includes("JACKPOT")
-                ? "border-emerald-400 bg-emerald-900/70 text-emerald-100"
-                : message.includes("win")
-                  ? "border-emerald-400/70 bg-emerald-950/80 text-emerald-100"
-                  : "border-emerald-500/40 bg-black/60 text-emerald-100/80"
-            }`}
-          >
-            {message}
-          </p>
-          <p className="text-[11px] text-emerald-200/70">
-            Tip: raise your bet for bigger payouts, but watch your balance.
-          </p>
+        <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-100/85 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-2 sm:max-w-xs">
+            <p
+              className={`message-pop rounded-xl border px-3 py-2 text-xs sm:text-sm ${
+                message.includes("JACKPOT")
+                  ? "border-emerald-400 bg-emerald-900/70 text-emerald-100"
+                  : message.includes("win")
+                    ? "border-emerald-400/70 bg-emerald-950/80 text-emerald-100"
+                    : "border-emerald-500/40 bg-black/60 text-emerald-100/80"
+              }`}
+            >
+              {message}
+            </p>
+            <p className="text-[11px] text-emerald-200/70">
+              Tip: raise your bet for bigger payouts, but watch your balance.
+            </p>
+          </div>
+
+          <div className="w-full rounded-2xl border border-emerald-500/40 bg-black/50 px-3 py-3 text-[11px] sm:w-52">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/90">
+              Rewards
+            </p>
+            <ul className="space-y-1.5 text-emerald-100/85">
+              <li className="flex items-center justify-between">
+                <span>Three 7 symbols</span>
+                <span className="font-semibold">×10 bet</span>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Three clover symbols</span>
+                <span className="font-semibold">×5 bet</span>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Any three of a kind</span>
+                <span className="font-semibold">×3 bet</span>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Any two matching symbols</span>
+                <span className="font-semibold">×2 bet</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
