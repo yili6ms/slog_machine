@@ -1,9 +1,7 @@
 {
-  "//": "Vercel project configuration for this Next.js app",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "devCommand": "npm run dev",
   "installCommand": "npm install"
 }
-
